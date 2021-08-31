@@ -10,12 +10,20 @@ function logMessage(msg) {
 }
 
 // Nutzer beim Server anmelden
-function joinRoom(userName) {
-    socket.emit('joinRoom', userName);
+function joinRoom(userData) {
+    console.log("function joinroom:");
+    console.log(userData);
+    socket.emit('joinRoom', userData);
 }
 
 socket.on('userJoined', data => {
-    welcomeUser(data.name);
+    console.log("on user Joined");
+    console.log(data);
+    console.log(data.name + data.color);
+    console.log("userList")
+    console.log(data.nameList)
+    welcomeUser(data.name, data.color);
+
     updateUserList(data.nameList);
 });
 

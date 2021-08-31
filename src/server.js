@@ -2,6 +2,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
+const { X_OK } = require('constants');
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,6 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Liste aller Nutzer
 let userList = [];
 let socketList = [];
+let userData = [];
 
 // Client-Server-Kommunikation
 io.on('connection', socket => {
@@ -31,11 +33,17 @@ io.on('connection', socket => {
     });
 
     // Spieler beim Server anmelden
-    socket.on('joinRoom', userName => {
-        userList.push(userName);
-        socketList.push([userName, socket.id]);
+    socket.on('joinRoom', userData => {
 
-        io.emit('userJoined', { name: userName, nameList: userList });
+        console.log("on joinroom: ");
+        console.log(userData);
+
+        userList.push(userData);
+        socketList.push([userData, socket.id]);
+        console.log("userList: ");
+        console.log(userList);
+
+        io.emit('userJoined', { name: userData[0], nameList: userList, color:userData[1]});
     });
 
     // Nachricht an alle anderen Nutzer weiterleiten
